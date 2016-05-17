@@ -11,9 +11,11 @@ namespace DbMockingExtensions.ExampleDb
     {
         public ExampleDbContext() : base("exampleDbConnectionString")
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
 
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
+        public DbSet<Revision> Revisions { get; set; }
     }
 }

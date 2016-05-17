@@ -30,8 +30,11 @@ namespace DbMockingExtensions.ExampleDb
 
         public async Task<Author> FindAuthorAsync(int id)
         {
-            //return await _context.Authors.Include(a => a.Books).FirstOrDefaultAsync(a => a.Id == id);
-            return await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
+            var author = await _context.Authors.Include(a => a.Books.Select(b => b.Revisions)).FirstOrDefaultAsync(a => a.Id == id);
+
+            //var changeDescription = author.Books.FirstOrDefault().Revisions.FirstOrDefault().ChangeDescription;
+            return author;
+            //return await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<List<Book>> GetAllBooks()

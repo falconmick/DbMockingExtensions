@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace DbMockingExtensions.ExampleDb.Models
 {
-    public class Book
+    public class Revision
     {
         public int Id { get; set; }
-        public string Title { get; set; }
-        public virtual Author Author { get; set; }
-        public virtual List<Revision> Revisions { get; set; } 
+        public string ChangeDescription { get; set; }
     }
 }

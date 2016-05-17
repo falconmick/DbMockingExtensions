@@ -26,8 +26,9 @@ namespace DbMockingExtensions
             bookSetMock.As<IQueryable<TSet>>().Setup(m => m.Expression).Returns(fakeData.Expression);
             bookSetMock.As<IQueryable<TSet>>().Setup(m => m.ElementType).Returns(fakeData.ElementType);
             bookSetMock.As<IQueryable<TSet>>().Setup(m => m.GetEnumerator()).Returns(fakeData.GetEnumerator());
+            bookSetMock.Setup(x => x.Include(It.IsAny<string>()))
+                .Returns(bookSetMock.Object);
 
-            var mockContext = new Mock<TContext>();
             setup.Returns(bookSetMock.Object);
         }
     }

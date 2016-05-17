@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DbMockingExtensions.ExampleDb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,13 +29,20 @@ namespace DbMockingExtensions.ExampleDb.Tests
                 Name = "Otherbody"
             };
 
+            var book1Revision = new Revision
+            {
+                Id = 1,
+                ChangeDescription = "blah"
+            };
+
             var books = new List<Book>
             {
                 new Book
                 {
                     Id = 1,
                     Title = "Some Amazing Book",
-                    Author = author1
+                    Author = author1,
+                    Revisions = new List<Revision> { book1Revision }
                 },
                 new Book
                 {
@@ -75,7 +83,7 @@ namespace DbMockingExtensions.ExampleDb.Tests
             var mockContext = new Mock<IExampleDbContext>();
             mockContext.Setup(m => m.Books).WireUpAsyncDbMoq(books);
             mockContext.Setup(m => m.Authors).WireUpAsyncDbMoq(authors);
-            
+
             var exampleService = new ExampleService(mockContext.Object);
 
             var asyncIntTasks = Task.Run(() => exampleService.AuthorCountAsync());
@@ -90,6 +98,7 @@ namespace DbMockingExtensions.ExampleDb.Tests
             Assert.AreEqual(authorCount, 2);
             Assert.AreEqual(foundAuthor.Name, "Somebody");
             Assert.AreEqual(foundAuthor.Books.Count, 2);
+            Assert.AreEqual(foundAuthor.Books.First().Revisions.First().ChangeDescription, "blah");
             Assert.AreEqual(allBooks.Count, 3);
         }
     }
